@@ -24,7 +24,7 @@ class MmrApplicationTests {
         try {
             Connection connection = dataSource.getConnection();
             assertThat(connection).isNotNull();
-            log.info("Database -> {}", connection.getCatalog());
+            log.info("Database -> {}", connection.getSchema());
         } catch (SQLException ex) {
             log.info("An exception occurred -> {}", ex.getMessage());
         }
