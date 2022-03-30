@@ -1,6 +1,6 @@
 package com.ehizman.mmr_application;
 
-import com.ehizman.mmr_application.models.User;
+import com.ehizman.mmr_application.models.PhoneNumber;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -14,10 +14,10 @@ public class AppConfig {
         return new LettuceConnectionFactory();
     }
 
-    //Creating RedisTemplate for Entity 'User'
+    //Creating RedisTemplate for Entity 'PhoneNumber'
     @Bean
-    public RedisTemplate<String, User> redisTemplate(){
-        RedisTemplate<String, User> empTemplate = new RedisTemplate<>();
+    public RedisTemplate<String, PhoneNumber> redisTemplate(){
+        RedisTemplate<String, PhoneNumber> empTemplate = new RedisTemplate<>();
         empTemplate.setConnectionFactory(redisConnectionFactory());
         return empTemplate;
     }
