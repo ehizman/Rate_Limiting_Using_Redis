@@ -21,19 +21,19 @@ public class RedisRateLimiterTest {
     RedisRateLimiter redisRateLimiter;
 
     @Test
-    void test_returnsFalseWhenRateLimiterIsExceeded(){
+    void test_returnsTrueWhenRateLimiterIsExceeded(){
         ValueOperations<String, String> operations = stringTemplate.opsForValue();
         operations.set("Ehis", "53");
         boolean result = redisRateLimiter.isLimitExceeded("Ehis");
-        assertFalse(result);
+        assertTrue(result);
     }
 
     @Test
-    void test_returnsTrueWhenRateLimiterIsNotExceeded(){
+    void test_returnsFalseWhenRateLimiterIsNotExceeded(){
         ValueOperations<String, String> operations = stringTemplate.opsForValue();
         operations.set("Ehis", "12");
         boolean result = redisRateLimiter.isLimitExceeded("Ehis");
-        assertTrue(result);
+        assertFalse(result);
     }
 
     @Test
@@ -43,6 +43,6 @@ public class RedisRateLimiterTest {
         operations.getAndExpire("Ehis", 3, TimeUnit.SECONDS);
         Thread.sleep(3000);
         boolean result = redisRateLimiter.isLimitExceeded("Ehis");
-        assertTrue(result);
+        assertFalse(result);
     }
 }
