@@ -15,9 +15,11 @@ import java.util.Optional;
 public class PhoneNumberServiceImpl implements PhoneNumberService{
     @Autowired
     PhoneNumberRepository phoneNumberRepository;
+    @Autowired
+    RedisUtility redisUtility;
 
     @Override
-    public void findByFromParameter(String fromParameter) throws APIException {
+    public void findByPhoneNumberParameter(String fromParameter) throws APIException {
         final Optional<PhoneNumber> phoneNumber = phoneNumberRepository.findByNumber(fromParameter);
         if (phoneNumber.isEmpty()){
             throw new APIException("from parameter not found");
@@ -34,6 +36,18 @@ public class PhoneNumberServiceImpl implements PhoneNumberService{
         }
         if (request.getText()==null || request.getText().trim().equals("")){
             throw new APIException("text parameter is missing");
+        }
+    }
+
+    @Override
+    public void checkText(Request request) {
+
+        if (request.getText().toUpperCase().trim().equals("STOP")){
+            String key = String.format("%s:%s", request.getTo(), request.getFrom());
+            log.info("Passed this point");
+
+            redisUtility.setValue(key);
+            log.info(String.format("Set %s into cache", key));
         }
     }
 }

@@ -32,29 +32,45 @@ public class Controller {
     @Autowired
     RedisRateLimiter rateLimiter;
 
+    @PostMapping("/inbound/sms/")
+    public ResponseEntity<?> inbound(@Valid @NotNull @RequestBody Request request){
+        try{
+            phoneNumberService.validate(request);
+            phoneNumberService.checkText(request);
+            log.info("Passed this point");
+
+            phoneNumberService.findByPhoneNumberParameter(request.getTo());
+            return new ResponseEntity<>(new APIResponse("inbound sms ok", ""), HttpStatus.OK);
+        } catch(Exception exception){
+            log.info("Exception --> {}", exception.getMessage());
+            return new ResponseEntity<>(new APIResponse("", exception.getMessage()), HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @PostMapping("/outbound/sms/")
-    public APIResponse outbound(@Valid @NotNull @RequestBody Request request) throws APIException {
+    public ResponseEntity<?> outbound(@Valid @NotNull @RequestBody Request request){
         try{
             phoneNumberService.validate(request);
             String key = String.format("%s:%s", request.getTo(), request.getFrom());
             redisUtility.getValue(key);
-            log.info("from --> {}", request.getFrom());
-            phoneNumberService.findByFromParameter(request.getFrom());
+            log.info("Passed this point");
+            phoneNumberService.findByPhoneNumberParameter(request.getFrom());
             if (rateLimiter.isLimitExceeded(request.getFrom())){
                 throw new APIException(String.format("limit reached for from %s", request.getFrom()));
             }
-            return new APIResponse("outbound sms ok", "");
+            return new ResponseEntity<>(new APIResponse("outbound sms ok", ""), HttpStatus.OK);
         } catch (Exception exception){
-            return new APIResponse("", exception.getMessage());
+            return new ResponseEntity<>(new APIResponse("", exception.getMessage()), HttpStatus.BAD_REQUEST);
         }
     }
+
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> handleValidationExceptions(MethodArgumentNotValidException exception) {
         Map<String, String> errors = new HashMap<>();
         exception.getBindingResult().getAllErrors().forEach((error -> {
             String fieldName = ((FieldError) error).getField();
-            String errorMessage = "is invalid";
+            String errorMessage = "parameter is invalid";
             errors.put(fieldName, errorMessage);
         }));
         List<APIResponse> errorMessages = new ArrayList<>();

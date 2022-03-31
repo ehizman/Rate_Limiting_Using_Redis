@@ -16,4 +16,13 @@ public class Request {
     private String to;
     @Size(min = 1, max = 120)
     private String text;
+
+    @Override
+    public String toString() {
+        return "{" +
+                "from='" + from + '\'' +
+                ", to='" + to + '\'' +
+                ", text='" + text + '\'' +
+                '}';
+    }
 }

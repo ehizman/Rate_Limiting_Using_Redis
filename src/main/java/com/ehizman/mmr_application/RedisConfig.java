@@ -18,8 +18,8 @@ public class RedisConfig {
 
     //Creating RedisTemplate for Entity 'PhoneNumber'
     @Bean
-    public RedisTemplate<String, Request> redisTemplate(){
-        RedisTemplate<String, Request> template = new RedisTemplate<>();
+    public RedisTemplate<String, Object> redisTemplate(){
+        RedisTemplate<String, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(redisConnectionFactory());
         template.setKeySerializer( new StringRedisSerializer() );
         template.setHashValueSerializer( new GenericToStringSerializer<>( Object.class ) );
