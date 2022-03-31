@@ -7,7 +7,7 @@ Two APIs that allow a user to send inbound SMS and outbound SMS.
 The detailed system requirements is in this [document](https://docs.google.com/document/d/1jZ8GZ5ppIP-ftSY7r8DBIyelLul3dyh8TAKBX9ckzVU/edit)
 ## Installation
 
-Step 1: Clone repository
+Step 1: Clone the repository
 
 Step 2: Install dependencies: cd into the root folder and run the following command: `mvn install`
 
