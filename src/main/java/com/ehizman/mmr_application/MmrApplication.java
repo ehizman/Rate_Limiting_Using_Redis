@@ -11,5 +11,4 @@ public class MmrApplication {
     public static void main(String[] args) {
         SpringApplication.run(MmrApplication.class, args);
     }
-
 }
