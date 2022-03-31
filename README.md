@@ -14,6 +14,6 @@ Step 2: Install dependencies: cd into the root folder and run the following comm
 Step 3: Download and install your redis server. Start your redis server using the `redis -server` command on your terminal.
 
 Step 4: Setup database: run on data dump in the folder
-`schema.sql` on your psql console.
+`schema.sql` script by running the following command on your terminal: `psql databasename < <path to data dump script>`.
 
 Step 4: Run the project
