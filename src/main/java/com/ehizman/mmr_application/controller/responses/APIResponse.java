@@ -1,4 +1,4 @@
-package com.ehizman.mmr_application.controller.requests_responses;
+package com.ehizman.mmr_application.controller.responses;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

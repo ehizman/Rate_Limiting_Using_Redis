@@ -1,6 +1,6 @@
-package com.ehizman.mmr_application.service;
+package com.ehizman.mmr_application.services;
 
-import com.ehizman.mmr_application.controller.requests_responses.Request;
+import com.ehizman.mmr_application.controller.requests.Request;
 import com.ehizman.mmr_application.exceptions.APIException;
 import com.ehizman.mmr_application.models.PhoneNumber;
 import com.ehizman.mmr_application.repositories.PhoneNumberRepository;
@@ -41,7 +41,6 @@ public class PhoneNumberServiceImpl implements PhoneNumberService{
 
     @Override
     public void checkText(Request request) {
-
         if (request.getText().toUpperCase().trim().equals("STOP")){
             String key = String.format("%s:%s", request.getTo(), request.getFrom());
             log.info("Passed this point");

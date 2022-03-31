@@ -1,10 +1,10 @@
 package com.ehizman.mmr_application.controller;
 
-import com.ehizman.mmr_application.controller.requests_responses.APIResponse;
-import com.ehizman.mmr_application.controller.requests_responses.Request;
+import com.ehizman.mmr_application.controller.responses.APIResponse;
+import com.ehizman.mmr_application.controller.requests.Request;
 import com.ehizman.mmr_application.exceptions.APIException;
-import com.ehizman.mmr_application.service.PhoneNumberService;
-import com.ehizman.mmr_application.service.RedisUtility;
+import com.ehizman.mmr_application.services.PhoneNumberService;
+import com.ehizman.mmr_application.services.RedisUtility;
 import com.ehizman.mmr_application.services.RedisRateLimiter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +37,6 @@ public class Controller {
         try{
             phoneNumberService.validate(request);
             phoneNumberService.checkText(request);
-            log.info("Passed this point");
 
             phoneNumberService.findByPhoneNumberParameter(request.getTo());
             return new ResponseEntity<>(new APIResponse("inbound sms ok", ""), HttpStatus.OK);
@@ -53,7 +52,6 @@ public class Controller {
             phoneNumberService.validate(request);
             String key = String.format("%s:%s", request.getTo(), request.getFrom());
             redisUtility.getValue(key);
-            log.info("Passed this point");
             phoneNumberService.findByPhoneNumberParameter(request.getFrom());
             if (rateLimiter.isLimitExceeded(request.getFrom())){
                 throw new APIException(String.format("limit reached for from %s", request.getFrom()));

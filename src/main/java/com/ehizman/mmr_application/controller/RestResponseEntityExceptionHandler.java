@@ -1,6 +1,6 @@
 package com.ehizman.mmr_application.controller;
 
-import com.ehizman.mmr_application.controller.requests_responses.APIResponse;
+import com.ehizman.mmr_application.controller.responses.APIResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

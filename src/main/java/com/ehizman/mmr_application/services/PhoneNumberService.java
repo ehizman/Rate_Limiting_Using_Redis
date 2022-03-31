@@ -1,6 +1,6 @@
-package com.ehizman.mmr_application.service;
+package com.ehizman.mmr_application.services;
 
-import com.ehizman.mmr_application.controller.requests_responses.Request;
+import com.ehizman.mmr_application.controller.requests.Request;
 import com.ehizman.mmr_application.exceptions.APIException;
 
 public interface PhoneNumberService {
