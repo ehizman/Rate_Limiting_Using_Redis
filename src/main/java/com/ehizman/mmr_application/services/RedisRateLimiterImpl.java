@@ -21,11 +21,11 @@ public class RedisRateLimiterImpl implements RedisRateLimiter {
 
     private static final int REQUESTS_PER_24_HOURS = 50;
 
-    public boolean isAllowed(String key) {
+    private boolean isNotAllowed(String key) {
         ValueOperations<String, String> operations = stringTemplate.opsForValue();
         String requests = operations.get(key);
         if (StringUtils.isNotBlank(requests) && Integer.parseInt(requests) >= REQUESTS_PER_24_HOURS) {
-            return false;
+            return true;
         }
         List<Object> txResults = stringTemplate.execute(new SessionCallback<>() {
             @Override
@@ -40,10 +40,10 @@ public class RedisRateLimiterImpl implements RedisRateLimiter {
             }
         });
         log.info("Current request count: " + txResults.get(0));
-        return true;
+        return false;
     }
 
-    public boolean isLimitExceeded(String username) {
-       return isAllowed(username);
+    public boolean isLimitExceeded(String key) {
+       return isNotAllowed(key);
     }
 }
