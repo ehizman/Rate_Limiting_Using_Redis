@@ -82,7 +82,6 @@
                 <configuration>
                     <archive>
                         <manifest>
-
                             <!-- give full qualified name of your main class-->
                             <mainClass>com.ehizman.mmr_application.MmrApplication</mainClass>
                         </manifest>
