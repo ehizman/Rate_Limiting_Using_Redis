@@ -24,7 +24,7 @@ import java.util.List;
 @RestController
 @Slf4j
 @RequestMapping("API/")
-@CrossOrigin
+@CrossOrigin(origins = "*", maxAge = 3600)
 public class Controller {
     @Autowired
     RedisUtility redisUtility;
