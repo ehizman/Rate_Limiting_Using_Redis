@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Created-By: Apache Maven 3.6.3
+Built-By: anina
+Build-Jdk: 15.0.2
+Implementation-Title: MMR_Application
+Implementation-Version: 0.0.1-SNAPSHOT
+Implementation-Vendor-Id: com.ehizman
+Implementation-URL: https://spring.io/projects/spring-boot/MMR_Applicati
+ on
+Main-Class: com.ehizman.mmr_application.MmrApplication
+
