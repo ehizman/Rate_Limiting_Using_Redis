@@ -1,6 +1,10 @@
 package com.ehizman.mmr_application;
 
+import io.lettuce.core.RedisClient;
+import io.lettuce.core.RedisURI;
+import io.lettuce.core.api.StatefulRedisConnection;
 import io.pivotal.cfenv.core.CfEnv;
+import org.springframework.boot.autoconfigure.data.redis.LettuceClientConfigurationBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -14,9 +18,25 @@ public class RedisConfig {
     CfEnv cfEnv = new CfEnv();
     String tag = "redis";
     @Bean
+    public LettuceClientConfigurationBuilderCustomizer lettuceClientConfigurationBuilderCustomizer() {
+        return clientConfigurationBuilder -> {
+            if (clientConfigurationBuilder.build().isUseSsl()) {
+                clientConfigurationBuilder.useSsl().disablePeerVerification();
+            }
+        };
+    }
+    @Bean
     public RedisConnectionFactory redisConnectionFactory() {
         return new LettuceConnectionFactory();
     }
+    public static StatefulRedisConnection<String, String> connect() {
+        RedisURI redisURI = RedisURI.create(System.getenv("REDIS_URL"));
+        redisURI.setVerifyPeer(false);
+
+        RedisClient redisClient = RedisClient.create(redisURI);
+        return redisClient.connect();
+    }
+
 
     //Creating RedisTemplate for Entity 'PhoneNumber'
     @Bean
