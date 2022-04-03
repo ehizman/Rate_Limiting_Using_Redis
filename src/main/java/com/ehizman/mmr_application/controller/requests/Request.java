@@ -5,12 +5,10 @@ package com.ehizman.mmr_application.controller.requests;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import org.springframework.data.redis.core.RedisHash;
 
 import javax.validation.constraints.Size;
 
 @Data
-@RedisHash("user_request")
 @AllArgsConstructor
 @Builder
 public class Request {

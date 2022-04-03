@@ -1,5 +1,6 @@
 package com.ehizman.mmr_application;
 
+import io.pivotal.cfenv.core.CfEnv;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -10,6 +11,8 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
 public class RedisConfig {
+    CfEnv cfEnv = new CfEnv();
+    String tag = "redis";
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
         return new LettuceConnectionFactory();
