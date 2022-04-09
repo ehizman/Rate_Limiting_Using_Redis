@@ -37,7 +37,6 @@ public class RedisConfig {
         return redisClient.connect();
     }
 
-
     //Creating RedisTemplate for Entity 'PhoneNumber'
     @Bean
     public RedisTemplate<String, Object> redisTemplate(){
