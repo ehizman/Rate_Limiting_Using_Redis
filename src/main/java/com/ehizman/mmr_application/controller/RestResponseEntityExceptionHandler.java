@@ -19,19 +19,19 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
     @ExceptionHandler({APIException.class})
     public ResponseEntity<Object> handleAuthenticationException(AuthenticationException exception, WebRequest request) {
-        return new ResponseEntity<Object>("Incorrect username or password", new HttpHeaders(), HttpStatus.valueOf(403));
+        return new ResponseEntity<>("Incorrect username or password", new HttpHeaders(), HttpStatus.valueOf(403));
     }
 
     @ExceptionHandler({BadCredentialsException.class})
     public ResponseEntity<Object> handleBadCredentialsException(BadCredentialsException exception, WebRequest request) {
         APIResponse response = new APIResponse("" , "Invalid Username or Password");
-        return new ResponseEntity<Object>(response, new HttpHeaders(), HttpStatus.valueOf(403));
+        return new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.valueOf(403));
     }
 
     @ExceptionHandler({AccessDeniedException.class})
-    public ResponseEntity<Object> handleAccessDeniedException(AccessDeniedException exception, WebRequest request) {
+    public ResponseEntity<Object> handleAccessDeniedException(WebRequest request) {
         APIResponse response = new APIResponse("","You do not have permission to perform that action");
-        return new ResponseEntity<Object>(
+        return new ResponseEntity<>(
                response , new HttpHeaders(), HttpStatus.valueOf(403));
     }
 
