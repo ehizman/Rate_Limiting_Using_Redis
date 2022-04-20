@@ -18,15 +18,5 @@ import javax.annotation.PostConstruct;
 public class MmrApplication {
     public static void main(String[] args) {
         SpringApplication.run(MmrApplication.class, args);
-        connect();
-    }
-
-    public static RedisCommands<String, String> connect(){
-        RedisURI redisURI = RedisURI.create(System.getenv("REDIS_ENDPOINT_URI"));
-        log.info("RedisURI --> {}", redisURI);
-        redisURI.setVerifyPeer(false);
-
-        RedisClient redisClient = RedisClient.create(redisURI);
-        return redisClient.connect().sync();
     }
 }
