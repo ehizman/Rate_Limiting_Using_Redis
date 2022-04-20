@@ -30,15 +30,6 @@ public class RedisConfig {
         return new LettuceConnectionFactory();
     }
 
-    public static StatefulRedisConnection<String, String> connect(){
-        RedisURI redisURI = RedisURI.create(System.getenv("REDIS_ENDPOINT_URI"));
-        log.info("RedisURI --> {}", redisURI);
-        redisURI.setVerifyPeer(false);
-
-        RedisClient redisClient = RedisClient.create(redisURI);
-        return redisClient.connect();
-    }
-
     //Creating RedisTemplate for Entity 'PhoneNumber'
     @Bean
     public RedisTemplate<String, Object> redisTemplate(){
