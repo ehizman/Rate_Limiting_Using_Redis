@@ -39,7 +39,7 @@ public class RedisConfig {
 
     @Bean
     public static StatefulRedisConnection<String, String> connect(){
-        RedisURI redisURI = RedisURI.create(System.getenv("DATABASE_URL"));
+        RedisURI redisURI = RedisURI.create(System.getenv("REDIS_ENDPOINT_URI"));
         log.info("RedisURI --> {}", redisURI);
         redisURI.setVerifyPeer(false);
 
