@@ -25,8 +25,6 @@ public class RedisUtility {
     }
     public void setValue(final String key){
         redisTemplate.opsForValue().set(key,"STOP");
-        log.info("Redis template Passed this point");
-
         redisTemplate.expire(key, 4, TimeUnit.HOURS);
     }
 }

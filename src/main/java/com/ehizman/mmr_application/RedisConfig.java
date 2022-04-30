@@ -34,17 +34,30 @@ public class RedisConfig {
     }
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
-        return new LettuceConnectionFactory();
-    }
+        String endpointUrl = System.getenv("REDIS_ENDPOINT_URL");
+        if (endpointUrl == null) {
+            endpointUrl = "127.0.0.1:6379";
+        }
+        String password = System.getenv("REDIS_PASSWORD");
 
-    @Bean
-    public static StatefulRedisConnection<String, String> connect(){
-        RedisURI redisURI = RedisURI.create(System.getenv("DATABASE_URL"));
-        log.info("RedisURI --> {}", redisURI);
-        redisURI.setVerifyPeer(false);
+        String[] urlParts = endpointUrl.split(":");
 
-        RedisClient redisClient = RedisClient.create(redisURI);
-        return redisClient.connect();
+        String host = urlParts[0];
+        String port = "6379";
+
+        if (urlParts.length > 1) {
+            port = urlParts[1];
+        }
+
+        RedisStandaloneConfiguration config = new RedisStandaloneConfiguration(host, Integer.parseInt(port));
+
+        System.out.printf("Connecting to %s:%s with password: %s%n", host, port, password);
+
+        if (password != null) {
+            config.setPassword(password);
+        }
+        return new LettuceConnectionFactory(config);
+
     }
 
     //Creating RedisTemplate for Entity 'PhoneNumber'

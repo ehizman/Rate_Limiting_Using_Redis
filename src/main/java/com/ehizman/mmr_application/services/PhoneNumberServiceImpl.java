@@ -22,7 +22,7 @@ public class PhoneNumberServiceImpl implements PhoneNumberService{
     public void findByPhoneNumberParameter(String fromParameter) throws APIException {
         final Optional<PhoneNumber> phoneNumber = phoneNumberRepository.findByNumber(fromParameter);
         if (phoneNumber.isEmpty()){
-            throw new APIException("from parameter not found");
+            throw new APIException("to parameter not found");
         }
     }
 
@@ -43,10 +43,7 @@ public class PhoneNumberServiceImpl implements PhoneNumberService{
     public void checkText(Request request) {
         if (request.getText().toUpperCase().trim().equals("STOP")){
             String key = String.format("%s:%s", request.getTo(), request.getFrom());
-            log.info("Passed this point");
-
             redisUtility.setValue(key);
-            log.info(String.format("Set %s into cache", key));
         }
     }
 }

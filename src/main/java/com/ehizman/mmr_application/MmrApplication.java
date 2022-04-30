@@ -11,14 +11,7 @@ import javax.annotation.PostConstruct;
 @EnableCaching
 @SpringBootApplication
 public class MmrApplication {
-    @Autowired
-    StatefulRedisConnection<String, String> statefulRedisConnection;
     public static void main(String[] args) {
         SpringApplication.run(MmrApplication.class, args);
-    }
-
-    @PostConstruct
-    public void connectToRedis(){
-        statefulRedisConnection.sync();
     }
 }
