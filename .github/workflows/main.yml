@@ -1,17 +1,57 @@
-name: Deploy
+name: Java CI with Maven
 
 on:
   push:
-    branches:
-      - master
+    #    branches: [ indev, dev, main ]
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
 
 jobs:
+  #  mail:
+  #    name: Set up mail server
+  #    runs-on: ubuntu-latest
+  #
+  #    strategy:
+  #      matrix:
+  #        node-version: [ 14.x ]
+  #    steps:
+  #      - uses: actions/checkout@v2
+  #      - name: Use Node.js ${{ matrix.node-version }}
+  #        uses: actions/setup-node@v2
+  #        with:
+  #          node-version: ${{ matrix.node-version }}
+  #      - run: npm install -g maildev
+  #      - run: maildev
+
   build:
+    #    needs: mail
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 11
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+          cache: maven
+      #      - name: Set up node
+      - name: Build with Maven
+        run: mvn -B compile --file pom.xml
+        env:
+          PROFILE: dev
+
+  deploy:
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: CDNievas/heroku-action@v1.0 # This is the action
+      - uses: akhileshns/heroku-deploy@v3.12.12
         with:
-          heroku_email: "edemaehiz@gmail.com"
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: "springboot-redis-rate-limiter"
+          heroku_email: "edemaehiz@gmail.com"
