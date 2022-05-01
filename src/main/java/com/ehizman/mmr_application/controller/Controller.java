@@ -47,6 +47,10 @@ public class Controller {
         }
     }
 
+    @GetMapping("/welcome")
+    public String displayWelcome(){
+        return "Welcome to my Redis Rate Limiter";
+    }
     @PostMapping("/outbound/sms/")
     public ResponseEntity<?> outbound(@Valid @NotNull @RequestBody Request request){
         try{
