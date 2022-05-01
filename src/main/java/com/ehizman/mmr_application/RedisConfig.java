@@ -1,5 +1,8 @@
 package com.ehizman.mmr_application;
 
+import io.lettuce.core.RedisClient;
+import io.lettuce.core.RedisURI;
+import io.lettuce.core.api.StatefulRedisConnection;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.data.redis.LettuceClientConfigurationBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
@@ -23,9 +26,16 @@ public class RedisConfig {
             }
         };
     }
+    public static StatefulRedisConnection<String, String> connect() {
+        RedisURI redisURI = RedisURI.create(System.getenv("REDIS_URL"));
+        redisURI.setVerifyPeer(false);
+
+        RedisClient redisClient = RedisClient.create(redisURI);
+        return redisClient.connect();
+    }
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
-        String endpointUrl = System.getenv("REDIS_ENDPOINT_URI");
+        String endpointUrl = System.getenv("REDIS_URL");
         if (endpointUrl == null) {
             endpointUrl = "127.0.0.1:6379";
         }
