@@ -23,6 +23,7 @@ public class RedisUtility {
             );
         }
     }
+    //changed redis config
     public void setValue(final String key){
         redisTemplate.opsForValue().set(key,"STOP");
         redisTemplate.expire(key, 4, TimeUnit.HOURS);
