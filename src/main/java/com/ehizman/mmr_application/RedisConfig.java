@@ -9,55 +9,34 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
+import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericToStringSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.JedisPoolConfig;
+import redis.clients.jedis.Protocol;
+
+import java.net.URI;
+import java.net.URISyntaxException;
 
 
 @Configuration
 @Slf4j
 public class RedisConfig {
     @Bean
-    public LettuceClientConfigurationBuilderCustomizer lettuceClientConfigurationBuilderCustomizer() {
-        return clientConfigurationBuilder -> {
-            if (clientConfigurationBuilder.build().isUseSsl()) {
-                clientConfigurationBuilder.useSsl().disablePeerVerification();
-            }
-        };
-    }
-    public static StatefulRedisConnection<String, String> connect() {
-        RedisURI redisURI = RedisURI.create(System.getenv("REDIS_URL"));
-        redisURI.setVerifyPeer(false);
-
-        RedisClient redisClient = RedisClient.create(redisURI);
-        return redisClient.connect();
-    }
-    @Bean
-    public RedisConnectionFactory redisConnectionFactory() {
-        String endpointUrl = System.getenv("REDIS_URL");
-        if (endpointUrl == null) {
-            endpointUrl = "127.0.0.1:6379";
+    JedisConnectionFactory jedisConnectionFactory() {
+        try {
+            URI redisURI = new URI(System.getenv("REDISTOGO_URL"));
+            RedisStandaloneConfiguration standaloneConfiguration = new RedisStandaloneConfiguration(
+                    redisURI.getHost(), redisURI.getPort()
+            );
+            return new JedisConnectionFactory(standaloneConfiguration);
+        } catch (URISyntaxException e) {
+            throw new RuntimeException("Redis couldn't be configured from URL in REDISTOGO_URL env var:"+
+                    System.getenv("REDISTOGO_URL"));
         }
-        String password = System.getenv("REDIS_PASSWORD");
-
-        String[] urlParts = endpointUrl.split(":");
-
-        String host = urlParts[0];
-        String port = "6379";
-
-        if (urlParts.length > 1) {
-            port = urlParts[1];
-        }
-
-        RedisStandaloneConfiguration config = new RedisStandaloneConfiguration(host, Integer.parseInt(port));
-
-        System.out.printf("Connecting to %s:%s with password: %s%n", host, port, password);
-
-        if (password != null) {
-            config.setPassword(password);
-        }
-        return new LettuceConnectionFactory(config);
 
     }
 
@@ -65,7 +44,7 @@ public class RedisConfig {
     @Bean
     public RedisTemplate<String, Object> redisTemplate(){
         RedisTemplate<String, Object> template = new RedisTemplate<>();
-        template.setConnectionFactory(redisConnectionFactory());
+        template.setConnectionFactory(jedisConnectionFactory());
         template.setKeySerializer( new StringRedisSerializer() );
         template.setHashValueSerializer( new GenericToStringSerializer<>( Object.class ) );
         template.setValueSerializer( new GenericToStringSerializer<>( Object.class ));
