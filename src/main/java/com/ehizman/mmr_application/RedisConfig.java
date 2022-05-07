@@ -26,7 +26,7 @@ public class RedisConfig {
         if (profiles[0].equals("prod")){
             try {
                 String redisURL = System.getenv("REDISTOGO_URL");
-                String password = redisURL.substring(redisURL.lastIndexOf(":"), redisURL.indexOf("@"));
+                String password = redisURL.substring(redisURL.indexOf(":", redisURL.indexOf(":"))+1, redisURL.indexOf("@"));
                 URI redisURI = new URI(redisURL);
                 RedisStandaloneConfiguration standaloneConfiguration = new RedisStandaloneConfiguration(
                         redisURI.getHost(), redisURI.getPort()
