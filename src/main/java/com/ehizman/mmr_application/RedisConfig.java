@@ -25,10 +25,13 @@ public class RedisConfig {
         String[] profiles = env.getActiveProfiles();
         if (profiles[0].equals("prod")){
             try {
-                URI redisURI = new URI(System.getenv("REDISTOGO_URL"));
+                String redisURL = System.getenv("REDISTOGO_URL");
+                String password = redisURL.substring(redisURL.lastIndexOf(":"), redisURL.indexOf("@"));
+                URI redisURI = new URI(redisURL);
                 RedisStandaloneConfiguration standaloneConfiguration = new RedisStandaloneConfiguration(
                         redisURI.getHost(), redisURI.getPort()
                 );
+                standaloneConfiguration.setPassword(password);
                 return new JedisConnectionFactory(standaloneConfiguration);
             } catch (URISyntaxException e) {
                 throw new RuntimeException("Redis couldn't be configured from URL in REDISTOGO_URL env var:"+
