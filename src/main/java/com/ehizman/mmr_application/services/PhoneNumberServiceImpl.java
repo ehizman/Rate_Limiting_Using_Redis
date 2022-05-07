@@ -40,10 +40,10 @@ public class PhoneNumberServiceImpl implements PhoneNumberService{
     }
 
     @Override
-    public void checkText(Request request) {
+    public void setText(Request request) throws APIException {
         if (request.getText().toUpperCase().trim().equals("STOP")){
             String key = String.format("%s:%s", request.getTo(), request.getFrom());
-            redisUtility.setValue(key);
+            redisUtility.setValue(key, request.getText().toUpperCase().trim());
         }
     }
 }

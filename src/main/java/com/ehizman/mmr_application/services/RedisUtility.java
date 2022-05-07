@@ -3,29 +3,29 @@ package com.ehizman.mmr_application.services;
 import com.ehizman.mmr_application.exceptions.APIException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 
-import java.util.concurrent.TimeUnit;
 
 @Service
 @Slf4j
 public class RedisUtility {
     @Autowired
-    RedisTemplate<String, Object> redisTemplate;
+    JedisPool jedisPool;
 
-    public void getValue( final String key) throws APIException {
-        Object value = redisTemplate.opsForValue().get(key);
-        if (value != null){
-            throw new APIException(
-                    String.format("sms from %s to %s blocked by STOP request",
-                            key.split(":")[1], key.split(":")[0])
-            );
+    public String getValue( final String key) throws APIException {
+        try(Jedis jedis = jedisPool.getResource()){
+            log.info("Key --> {}", jedis.get(key));
+            return jedis.get(key);
         }
+
     }
     //changed redis config
-    public void setValue(final String key){
-        redisTemplate.opsForValue().set(key,"STOP");
-        redisTemplate.expire(key, 4, TimeUnit.HOURS);
+    public void setValue(final String key, final String message){
+        try(Jedis jedis = jedisPool.getResource()){
+            jedis.set(key, message);
+            jedis.expire(key, Long.valueOf(4*60*60));
+        }
     }
 }

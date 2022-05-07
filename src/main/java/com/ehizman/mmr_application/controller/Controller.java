@@ -37,8 +37,7 @@ public class Controller {
     public ResponseEntity<?> inbound(@Valid @NotNull @RequestBody Request request){
         try{
             phoneNumberService.validate(request);
-            phoneNumberService.checkText(request);
-
+            phoneNumberService.setText(request);
             phoneNumberService.findByPhoneNumberParameter(request.getTo());
             return new ResponseEntity<>(new APIResponse("inbound sms ok", ""), HttpStatus.OK);
         } catch(Exception exception){
@@ -56,7 +55,9 @@ public class Controller {
         try{
             phoneNumberService.validate(request);
             String key = String.format("%s:%s", request.getTo(), request.getFrom());
-            redisUtility.getValue(key);
+            if (redisUtility.getValue(key) != null){
+                throw new APIException(String.format("sms from %s to %s blocked by STOP request", request.getFrom(), request.getTo()));
+            }
             phoneNumberService.findByPhoneNumberParameter(request.getFrom());
             if (rateLimiter.isLimitExceeded(request.getFrom())){
                 throw new APIException(String.format("limit reached for from %s", request.getFrom()));

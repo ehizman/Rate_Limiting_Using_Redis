@@ -12,6 +12,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -72,15 +73,16 @@ class PhoneNumberServiceImplTest {
     }
 
     @Test
-    void checkText(){
+    void checkText() throws APIException {
         Request request = Request.builder()
                 .from("4924195509198")
                 .to("49241955091")
                 .text("STOP\r ")
                 .build();
-        doNothing().when(redisUtility).setValue(redisKeyArgumentCaptor.capture());
-        phoneNumberService.checkText(request);
-        String key = redisKeyArgumentCaptor.getValue();
-        assertEquals("49241955091:4924195509198", key);
+        doNothing().when(redisUtility).setValue(redisKeyArgumentCaptor.capture(), redisKeyArgumentCaptor.capture());
+        phoneNumberService.setText(request);
+        List<String> keys = redisKeyArgumentCaptor.getAllValues();
+        assertEquals("49241955091:4924195509198", keys.get(0));
+        assertEquals("STOP", keys.get(1));
     }
 }
