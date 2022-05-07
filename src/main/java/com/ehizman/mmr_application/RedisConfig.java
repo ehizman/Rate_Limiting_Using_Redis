@@ -32,7 +32,10 @@ public class RedisConfig {
                         redisURI.getHost(), redisURI.getPort()
                 );
                 standaloneConfiguration.setPassword(password);
-                return new JedisConnectionFactory(standaloneConfiguration);
+                JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory(standaloneConfiguration);
+                jedisConnectionFactory.getPoolConfig().setMaxIdle(30);
+                jedisConnectionFactory.getPoolConfig().setMinIdle(10);
+                return jedisConnectionFactory;
             } catch (URISyntaxException e) {
                 throw new RuntimeException("Redis couldn't be configured from URL in REDISTOGO_URL env var:"+
                         System.getenv("REDISTOGO_URL"));
