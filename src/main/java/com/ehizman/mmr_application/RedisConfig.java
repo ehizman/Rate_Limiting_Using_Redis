@@ -23,7 +23,7 @@ import java.net.URISyntaxException;
 public class RedisConfig {
     @Autowired
     private ConfigurableEnvironment env;
-    JedisConnectionFactory jedisConnectionFactory() {
+    private JedisConnectionFactory jedisConnectionFactory() {
         String[] profiles = env.getActiveProfiles();
         if (profiles[0].equals("prod")){
             try {
